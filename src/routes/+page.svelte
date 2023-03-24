@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { onMount, onDestroy } from "svelte";
-	import { Col, Row, FormGroup, Input } from "sveltestrap";
-	import Select from "svelte-select";
-	import HCaptcha from "svelte-hcaptcha";
+
 	import Nested from "../logo.svelte";
+	import Form from "../form.svelte";
 
 	const endpoint = "http://localhost:3000";
-
-	let countries: Array<string> = [];
 
 	let combined_hours: Array<Array<string>> = [];
 
@@ -15,13 +12,12 @@
 		combined_hours = await fetch(endpoint + "/api/summary").then(
 			(response) => response.json()
 		);
-		console.log(combined_hours);
 	}
 
 	const pollData = () => {
 		setTimeout(() => {
 			fetchData().then(() => pollData());
-		}, 1000 * 10);
+		}, 1000 * 10); // every 10s
 	};
 
 	onMount(() => {
@@ -31,48 +27,6 @@
 	onDestroy(() => {
 		clearTimeout(pollData);
 	});
-
-	async function get_countries(text: string) {
-		let base = endpoint + "/api/country";
-		let url = text == "" ? base : base + "?name=" + text;
-
-		countries = await fetch(url).then((response) => response.json());
-
-		return countries;
-	}
-
-	let captcha: HCaptcha;
-
-	const handleError = () => {
-		captcha.reset();
-	};
-	let hcaptcha_key = "10000000-ffff-ffff-ffff-000000000001";
-	// let hcaptcha_key = '8458f785-ae1a-492f-b14f-3fdcac064c38';
-
-	let token: string | null = null;
-	let country: any = null;
-	let hours: string | null = null;
-
-	let isHuman = (event: any) => {
-		token = event["detail"]["token"];
-	};
-
-	async function pedge() {
-		return await fetch(endpoint + "/api/pledge", {
-			method: "POST",
-			body: JSON.stringify({
-				token,
-				country: country["value"],
-				hours,
-			}),
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json",
-			},
-		}).catch((error) => {
-			console.log(error);
-		});
-	}
 </script>
 
 <svelte:head>
@@ -87,96 +41,49 @@
 		<Nested class="img-responsive center-block" />
 	</div>
 	<h1 class="text-center">
-		Work less without disclosing it to your employer, for climate
+		Work less without disclosing it to your employer
 	</h1>
 
-	<p>A cost-effective civil desobidence action that many can.</p>
+	<h4 class="text-center">a cost-effective action for climate</h4>
 
 	<p>
-		You decide how much to act based on your risk tolerance, personal
-		situation and your perception of your employer's contribution to the
-		climate crisis.
+		You decide how much less based on your risk tolerance and perception of
+		your employer's contribution to the climate crisis. We suggest 30
+		minutes a day to start (2.5h/w), and adjust to your liking on a month
+		basis.
 	</p>
 
 	<p>
-		We suggest 30 minutes a day as a starting point, and adjust to your
-		liking on a month basis.
+		Let us know how much you pledge so we can quantify our combined impact:
 	</p>
+	<Form />
 
 	<p>
-		Let us know how much you are acting so we can quantify our combined
-		impact:
-	</p>
-
-	<form on:submit|preventDefault={pedge} class="needs-validation">
-		<Row>
-			<Col>
-				<Select
-					placeholder="Country you work at"
-					loadOptions={get_countries}
-					bind:value={country}
-					required
-				/>
-			</Col>
-			<Col>
-				<FormGroup>
-					<Input
-						type="number"
-						placeholder="hours/week"
-						min="0"
-						max="10"
-						step="0.1"
-						bind:value={hours}
-						required
-					/>
-				</FormGroup>
-			</Col>
-			<Col>
-				<button
-					disabled={token === null ||
-						hours === null ||
-						country === null}
-					data-placement="top"
-					title={token === null ? "Fill form" : ""}
-					type="submit"
-					class="btn btn-success"
-					data-toggle="tooltip"
-				>
-					Pledge
-				</button>
-			</Col>
-		</Row>
-		<div class="text-center">
-			<HCaptcha
-				bind:this={captcha}
-				sitekey={hcaptcha_key}
-				on:success={isHuman}
-				on:error={handleError}
-			/>
-		</div>
-	</form>
-	<p>
-		<small>We only store information you provide in the form.</small>
+		<small>We only store information you provide in this form.</small>
 	</p>
 
 	<p>Why:</p>
 	<ul>
 		<li>
-			your career is not negatively impacted if you leverage this free
-			time for training / up-skill yourself
+			<strong>improve your life</strong>: learn a new skill, more time
+			with family or have fun with this time
 		</li>
 		<li>
-			<strong>decreases CO2 emissions</strong> by reducing economical output
+			<strong>reduce CO2 emissions</strong>: it reduces economical output
+			by a multiplier of your salary
 		</li>
 		<li>
-			<strong>decreases inequality</strong> by reducing the amount of value
+			<strong>reduce inequality</strong>: it reduces the amount of value
 			that your employer extracts from you
 		</li>
 		<li>
-			<strong>impacts poluting companies the most</strong> as employees know
-			are contributing the most to the climate crisis
+			<strong>impacts poluting companies the most</strong>: you better
+			than any advertisment know how much your company is contributing to
+			the climate crisis
 		</li>
 	</ul>
+
+	<h2>Pledges around the world</h2>
 
 	<table class="table">
 		<thead>
@@ -196,13 +103,6 @@
 			{/each}
 		</tbody>
 	</table>
-
-	<div class="alert alert-warning" role="alert">
-		TODO: show number of hours per country
-	</div>
-	<div class="alert alert-warning" role="alert">
-		TODO: show total $ loss per month
-	</div>
 
 	<footer>
 		<p>Improve us on Github</p>
