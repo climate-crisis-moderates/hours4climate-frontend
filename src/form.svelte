@@ -3,12 +3,15 @@
     import Select from "svelte-select";
     import HCaptcha from "svelte-hcaptcha";
 
-    const endpoint = "http://localhost:3000";
+    import {
+        PUBLIC_API_ENDPOINT,
+        PUBLIC_HCAPTCHA_KEY,
+    } from "$env/static/public";
 
     let countries: Array<string> = [];
 
     async function get_countries(text: string) {
-        let base = endpoint + "/api/country";
+        let base = PUBLIC_API_ENDPOINT + "/api/country";
         let url = text == "" ? base : base + "?name=" + text;
 
         countries = await fetch(url).then((response) => response.json());
@@ -21,7 +24,6 @@
     const handleError = () => {
         captcha.reset();
     };
-    let hcaptcha_key = "10000000-ffff-ffff-ffff-000000000001";
     // let hcaptcha_key = '8458f785-ae1a-492f-b14f-3fdcac064c38';
 
     let token: string | null = null;
@@ -33,7 +35,7 @@
     };
 
     async function pedge() {
-        return await fetch(endpoint + "/api/pledge", {
+        return await fetch(PUBLIC_API_ENDPOINT + "/api/pledge", {
             method: "POST",
             body: JSON.stringify({
                 token,
@@ -92,7 +94,7 @@
         <div class="text-center">
             <HCaptcha
                 bind:this={captcha}
-                sitekey={hcaptcha_key}
+                sitekey={PUBLIC_HCAPTCHA_KEY}
                 on:success={isHuman}
                 on:error={handleError}
             />

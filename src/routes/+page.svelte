@@ -4,12 +4,12 @@
 	import Nested from "../logo.svelte";
 	import Form from "../form.svelte";
 
-	const endpoint = "http://localhost:3000";
+	import { PUBLIC_API_ENDPOINT } from '$env/static/public'
 
 	let combined_hours: Array<Array<string>> = [];
 
 	async function fetchData() {
-		combined_hours = await fetch(endpoint + "/api/summary").then(
+		combined_hours = await fetch(PUBLIC_API_ENDPOINT + "/api/summary").then(
 			(response) => response.json()
 		);
 	}
@@ -30,10 +30,7 @@
 </script>
 
 <svelte:head>
-	<link
-		rel="stylesheet"
-		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-	/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 </svelte:head>
 
 <main class="container">
@@ -49,7 +46,7 @@
 	<p>
 		You decide how much less based on your risk tolerance and perception of
 		your employer's contribution to the climate crisis. We suggest 30
-		minutes a day to start (2.5h/w), and adjust to your liking on a month
+		minutes a day to start (2.5 hours/week), and adjust to your liking on a month
 		basis.
 	</p>
 
@@ -95,11 +92,11 @@
 		</thead>
 		<tbody>
 			{#each combined_hours as country_hours}
-				<tr>
-					<td>{country_hours[0]}</td>
-					<td>{country_hours[1]}</td>
-					<td>{country_hours[2]}</td>
-				</tr>
+			<tr>
+				<td>{country_hours[0]}</td>
+				<td>{country_hours[1]}</td>
+				<td>{country_hours[2]}</td>
+			</tr>
 			{/each}
 		</tbody>
 	</table>
