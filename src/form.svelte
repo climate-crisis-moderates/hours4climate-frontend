@@ -24,8 +24,9 @@
     const handleError = () => {
         captcha.reset();
     };
-    // let hcaptcha_key = '8458f785-ae1a-492f-b14f-3fdcac064c38';
 
+    // whether the pledge has been submitted (once per page)
+    let can_submit = true;
     let token: string | null = null;
     let country: any = null;
     let hours: string | null = null;
@@ -46,58 +47,71 @@
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-        }).catch((error) => {
-            console.log(error);
-        });
+        })
+            .then(() => {
+                can_submit = false;
+            })
+            .catch((error) => {
+                console.log(error);
+                can_submit = false;
+            });
     }
 </script>
 
 <section>
-    <form on:submit|preventDefault={pedge} class="needs-validation">
-        <Row>
-            <Col>
-                <Select
-                    placeholder="Country you work at"
-                    loadOptions={get_countries}
-                    bind:value={country}
-                    required
-                />
-            </Col>
-            <Col>
-                <FormGroup>
-                    <Input
-                        type="number"
-                        placeholder="hours/week"
-                        min="0"
-                        max="10"
-                        step="0.1"
-                        bind:value={hours}
+    {#if can_submit}
+        <p>Pledge anonymously to quantify our combined impact:</p>
+        <form on:submit|preventDefault={pedge} class="needs-validation">
+            <Row>
+                <Col>
+                    <Select
+                        placeholder="Country you work at"
+                        loadOptions={get_countries}
+                        bind:value={country}
                         required
                     />
-                </FormGroup>
-            </Col>
-            <Col>
-                <button
-                    disabled={token === null ||
-                        hours === null ||
-                        country === null}
-                    data-placement="top"
-                    title={token === null ? "Fill form" : ""}
-                    type="submit"
-                    class="btn btn-success"
-                    data-toggle="tooltip"
-                >
-                    Pledge
-                </button>
-            </Col>
-        </Row>
-        <div class="text-center">
-            <HCaptcha
-                bind:this={captcha}
-                sitekey={PUBLIC_HCAPTCHA_KEY}
-                on:success={isHuman}
-                on:error={handleError}
-            />
-        </div>
-    </form>
+                </Col>
+                <Col>
+                    <FormGroup>
+                        <Input
+                            type="number"
+                            placeholder="hours/week"
+                            min="0"
+                            max="10"
+                            step="0.1"
+                            bind:value={hours}
+                            required
+                        />
+                    </FormGroup>
+                </Col>
+                <Col>
+                    <button
+                        disabled={token === null ||
+                            hours === null ||
+                            country === null}
+                        data-placement="top"
+                        title={token === null ? "Fill form" : ""}
+                        type="submit"
+                        class="btn btn-success"
+                        data-toggle="tooltip"
+                    >
+                        Pledge
+                    </button>
+                </Col>
+            </Row>
+            <div class="text-center">
+                <HCaptcha
+                    bind:this={captcha}
+                    sitekey={PUBLIC_HCAPTCHA_KEY}
+                    on:success={isHuman}
+                    on:error={handleError}
+                />
+            </div>
+        </form>
+        <p>
+            <small>We only store information you provide in this form.</small>
+        </p>
+    {:else}
+        <p>Thank you for your pedge. Enjoy your free time.</p>
+    {/if}
 </section>
