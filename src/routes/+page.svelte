@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { onMount, onDestroy } from "svelte";
-	import { Col, Row } from "sveltestrap";
-	import Bullseye from "svelte-bootstrap-icons/lib/Bullseye.svelte";
-	import CalendarHeart from "svelte-bootstrap-icons/lib/CalendarHeart.svelte";
-	import BuildingFillExclamation from "svelte-bootstrap-icons/lib/BuildingFillExclamation.svelte";
-	import GraphDown from "svelte-bootstrap-icons/lib/GraphDown.svelte";
+	import Discord from "svelte-bootstrap-icons/lib/Discord.svelte";
 
 	import Nested from "../logo.svelte";
 	import Form from "../form.svelte";
+	import Benefits from "../benefits.svelte";
 
 	import { PUBLIC_API_ENDPOINT } from "$env/static/public";
 
@@ -42,123 +39,63 @@
 	/>
 </svelte:head>
 
-<main class="container">
-	<div class="text-center">
-		<Nested class="img-responsive center-block" />
-	</div>
-	<h1 class="text-center">Work less without disclosing it</h1>
+<main class="container-fluid px-0">
+	<nav class="navbar navbar-expand-lg navbar-light">
+		<div class="container-fluid">
+			<span class="navbar-brand">Hours4Climate</span>
+			<a href="https://discord.gg/FgcWVbypqU" title="Join us on Discord">
+				<Discord color="#7289da" width={32} height={32} />
+			</a>
+		</div>
+	</nav>
 
-	<h4 class="text-center">
-		a cost-effective civil disobedience action to tackle climate crisis
-	</h4>
-	<p>
-		Time is your biggest asset - work less without disclosing it to your
-		employer based on your risk tolerance and their behavior towards
-		climate. We suggest 30 minutes a day (2.5 hours/week), and adjust to
-		your liking on a monthly basis.
-	</p>
+	<section class="text-center" style:margin-bottom="4em">
+		<Nested class="img-responsive center-block text-center" />
+		<h1>Work less without disclosing it</h1>
+		<h4>cost-effective action to tackle the climate crisis</h4>
+		<p>
+			Work less without disclosing to your employer when you believe that
+			they are not doing enough to address the climate crisis.
+		</p>
+		<p>
+			Decide how much based on your risk tolerance and their behavior. We
+			suggest 30 minutes a day (2.5 hours/week), and adjust on a monthly
+			basis.
+		</p>
+	</section>
 
-	<Form />
+	<Benefits />
 
-	<h2>Why</h2>
-	<Row>
-		<Col class="d-flex align-items-stretch mt-3">
-			<div class="card">
-				<div class="card-body">
-					<p class="card-text text-center">
-						<CalendarHeart width={64} height={64} />
-					</p>
-					<h5 class="card-title">Improve your life</h5>
-					<p class="card-text">
-						not working frees your time to learn a new skill, spend
-						more time with family, sleep or have fun.
-					</p>
-				</div>
-			</div>
-		</Col>
-		<Col class="d-flex align-items-stretch mt-3">
-			<div class="card">
-				<div class="card-body">
-					<p class="card-text text-center">
-						<GraphDown width={64} height={64} />
-					</p>
-					<h5 class="card-title">Reduce CO2 emissions</h5>
-					<p class="card-text">
-						not working reduces economical output by a multiplier of
-						your salary, which reduces CO2 emissions proportionally.
-					</p>
-				</div>
-			</div>
-		</Col>
-		<Col class="d-flex align-items-stretch mt-3">
-			<div class="card">
-				<div class="card-body">
-					<p class="card-text text-center">
-						<BuildingFillExclamation width={64} height={64} />
-					</p>
-					<h5 class="card-title">Target companies</h5>
-					<p class="card-text">
-						you better than any advertisment know how much your
-						company is poluting - act proportionally.
-					</p>
-				</div>
-			</div>
-		</Col>
-		<Col class="d-flex align-items-stretch mt-3">
-			<div class="card">
-				<div class="card-body">
-					<p class="card-text text-center">
-						<Bullseye width={64} height={64} />
-					</p>
-					<h5 class="card-title">Highly effective</h5>
-					<p class="card-text">
-						No smear advertisements, public activities or high
-						personal risks - act where it impacts the most, growth
-						and productivity.
-					</p>
-				</div>
-			</div>
-		</Col>
-	</Row>
+	<section style:background="#2E9FD8" style:padding="2em">
+		<h2 class="text-center">Pledge anonymously</h2>
+		<p class="text-center">to quantify our combined impact</p>
+		<Form />
+	</section>
 
-	<h2 class="mt-3">Pledges around the world</h2>
+	<section style:background="#9AC7D9" style:padding="2em">
+		<h2 class="text-center">Pledges so far</h2>
 
-	<table class="table mt-3">
-		<thead>
-			<tr>
-				<th scope="col">Country</th>
-				<th scope="col">Hours/week</th>
-				<th scope="col">Persons</th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each combined_hours as country_hours}
+		<table class="table">
+			<thead>
 				<tr>
-					<td>{country_hours[0]}</td>
-					<td>{country_hours[1]}</td>
-					<td>{country_hours[2]}</td>
+					<th scope="col">Country</th>
+					<th scope="col">Hours/week</th>
+					<th scope="col">Persons</th>
 				</tr>
-			{/each}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				{#each combined_hours as country_hours}
+					<tr>
+						<td>{country_hours[0]}</td>
+						<td>{country_hours[1]}</td>
+						<td>{country_hours[2]}</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</section>
 
-	<footer class="mt-3">
-		<Row>
-			<Col>
-				<p>
-					Improve us on <a
-						href="https://github.com/climate-crisis-moderates"
-						>Github</a
-					>
-				</p>
-			</Col>
-			<Col>
-				<p>
-					Join us on <a href="https://discord.gg/FgcWVbypqU"
-						>Discord</a
-					>
-				</p>
-			</Col>
-		</Row>
+	<footer style:padding="2em">
+		<p>Copyright 2023 Hours4Climate</p>
 	</footer>
 </main>

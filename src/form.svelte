@@ -58,9 +58,8 @@
     }
 </script>
 
-<section>
+<div>
     {#if can_submit}
-        <p>Pledge anonymously to quantify our combined impact:</p>
         <form on:submit|preventDefault={pedge} class="needs-validation">
             <Row>
                 <Col>
@@ -75,7 +74,7 @@
                     <FormGroup>
                         <Input
                             type="number"
-                            placeholder="hours/week"
+                            placeholder="hours per week"
                             min="0"
                             max="10"
                             step="0.1"
@@ -84,7 +83,7 @@
                         />
                     </FormGroup>
                 </Col>
-                <Col>
+                <Col md="1">
                     <button
                         disabled={token === null ||
                             hours === null ||
@@ -92,26 +91,23 @@
                         data-placement="top"
                         title={token === null ? "Fill form" : ""}
                         type="submit"
-                        class="btn btn-success"
+                        class="btn btn-primary"
                         data-toggle="tooltip"
                     >
                         Pledge
                     </button>
                 </Col>
             </Row>
-            <div class="text-center">
-                <HCaptcha
-                    bind:this={captcha}
-                    sitekey={PUBLIC_HCAPTCHA_KEY}
-                    on:success={isHuman}
-                    on:error={handleError}
-                />
-            </div>
         </form>
-        <p>
-            <small>We only store information you provide in this form.</small>
-        </p>
+        <div class="text-center">
+            <HCaptcha
+                bind:this={captcha}
+                sitekey={PUBLIC_HCAPTCHA_KEY}
+                on:success={isHuman}
+                on:error={handleError}
+            />
+        </div>
     {:else}
         <p>Thank you for your pedge. Enjoy your free time.</p>
     {/if}
-</section>
+</div>
