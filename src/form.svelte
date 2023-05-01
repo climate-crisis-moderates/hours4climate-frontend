@@ -58,11 +58,11 @@
     }
 </script>
 
-<div>
+<div class="container-fluid">
     {#if can_submit}
         <form on:submit|preventDefault={pedge} class="needs-validation">
             <Row>
-                <Col>
+                <Col md="5">
                     <Select
                         placeholder="Country you work at"
                         loadOptions={get_countries}
@@ -70,7 +70,7 @@
                         required
                     />
                 </Col>
-                <Col>
+                <Col md="5">
                     <FormGroup>
                         <Input
                             type="number"

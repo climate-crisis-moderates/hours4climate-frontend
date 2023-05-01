@@ -7,7 +7,7 @@
 <section>
     <section>
         <Row class="no-gutters">
-            <Col md="6" class="d-flex align-items-stretch">
+            <Col md="6" class="d-flex">
                 <Item
                     icon_component={Option.CalendarHeart}
                     background_color="#0DCAF0"
@@ -17,7 +17,7 @@
 				have fun"
                 />
             </Col>
-            <Col md="6" class="d-flex align-items-stretch">
+            <Col md="6" class="d-flex">
                 <Item
                     icon_component={Option.GraphDown}
                     background_color="#3D8BFD"
@@ -25,7 +25,7 @@
                     description="not working reduces emissions likely more than any of your individual actions"
                 />
             </Col>
-            <Col md="6" class="d-flex align-items-stretch">
+            <Col md="6" class="d-flex">
                 <Item
                     icon_component={Option.BuildingFillExclamation}
                     background_color="#FD9843"
@@ -33,7 +33,7 @@
                     description="you better than any advertisment know how much your company is poluting - act proportionally"
                 />
             </Col>
-            <Col md="6" class="d-flex align-items-stretch">
+            <Col md="6" class="d-flex">
                 <Item
                     icon_component={Option.Bullseye}
                     background_color="#E35D6A"
