@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Col, Row } from "sveltestrap";
 	import { onMount, onDestroy } from "svelte";
 	import Discord from "svelte-bootstrap-icons/lib/Discord.svelte";
 
@@ -41,8 +40,10 @@
 
 <svelte:head>
 	<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
 		rel="stylesheet"
-		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+		crossorigin="anonymous"
 	/>
 	<link
 		href="https://fonts.googleapis.com/css?family=Sofia Sans"
@@ -50,11 +51,7 @@
 	/>
 </svelte:head>
 
-<main
-	class="container-fluid px-0"
-	style:color="#084298"
-	style:font-family="Sofia Sans"
->
+<main style:color="#084298" style:font-family="Sofia Sans">
 	<nav
 		class="navbar navbar-expand-lg navbar-light"
 		style:background-color="#CFE2FF"
@@ -90,8 +87,8 @@
 			style:padding-top="2em"
 			style:padding-bottom="2em"
 		>
-			<Row>
-				<Col md="6">
+			<div class="row">
+				<div class="col-md-6">
 					<p>
 						<strong>Time is your biggest asset</strong> - Work less without
 						disclosing to your employer when you believe that they are
@@ -102,8 +99,8 @@
 						behavior. We suggest 30 minutes a day (2.5 hours/week),
 						and adjust on a monthly basis.
 					</p>
-				</Col>
-				<Col md="6">
+				</div>
+				<div class="col-md-6">
 					<h5 class="font-weight-bold">Latest pledges</h5>
 					<table
 						class="table table-bordered rounded text-center table-sm"
@@ -134,8 +131,8 @@
 							{/each}
 						</tbody>
 					</table>
-				</Col>
-			</Row>
+				</div>
+			</div>
 		</div>
 	</section>
 

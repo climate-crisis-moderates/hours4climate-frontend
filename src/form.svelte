@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Col, Row, FormGroup, Input } from "sveltestrap";
     import Select from "svelte-select";
     import HCaptcha from "svelte-hcaptcha";
 
@@ -61,29 +60,30 @@
 <div class="container-fluid">
     {#if can_submit}
         <form on:submit|preventDefault={pedge} class="needs-validation">
-            <Row>
-                <Col md="5">
+            <div class="row">
+                <div class="col-md-5">
                     <Select
                         placeholder="Country you work at"
                         loadOptions={get_countries}
                         bind:value={country}
                         required
                     />
-                </Col>
-                <Col md="5">
-                    <FormGroup>
-                        <Input
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <input
+                            class="form-control"
                             type="number"
                             placeholder="hours per week"
                             min="0"
-                            max="10"
+                            max="5"
                             step="0.1"
                             bind:value={hours}
                             required
                         />
-                    </FormGroup>
-                </Col>
-                <Col md="1">
+                    </div>
+                </div>
+                <div class="col-md-1">
                     <button
                         disabled={token === null ||
                             hours === null ||
@@ -96,8 +96,8 @@
                     >
                         Pledge
                     </button>
-                </Col>
-            </Row>
+                </div>
+            </div>
         </form>
         <div class="text-center">
             <HCaptcha
