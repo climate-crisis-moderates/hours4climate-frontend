@@ -9,18 +9,9 @@
 
 	import { PUBLIC_API_ENDPOINT } from "$env/static/public";
 
-	let combined_hours: Array<Array<string>> = [
-		["Canada", "1", "2"],
-		["US", "2", "2"],
-	];
+	let combined_hours: Array<Array<string>> = [];
 
-	let latest: Array<Array<string>> = [
-		["Canada", "1"],
-		["US", "2"],
-		["Canada", "1"],
-		["US", "2"],
-		["Canada", "1"],
-	];
+	let latest: Array<Array<string>> = [];
 
 	async function fetchData() {
 		combined_hours = await fetch(PUBLIC_API_ENDPOINT + "/api/summary").then(
@@ -39,6 +30,7 @@
 
 	let poll_id: number = 0;
 	onMount(() => {
+		fetchData();
 		poll_id = pollData();
 	});
 
@@ -99,7 +91,7 @@
 			style:padding-bottom="2em"
 		>
 			<Row>
-				<Col class="col-6">
+				<Col md="6">
 					<p>
 						<strong>Time is your biggest asset</strong> - Work less without
 						disclosing to your employer when you believe that they are
@@ -111,7 +103,7 @@
 						and adjust on a monthly basis.
 					</p>
 				</Col>
-				<Col class="col-6">
+				<Col md="6">
 					<h5 class="font-weight-bold">Latest pledges</h5>
 					<table
 						class="table table-bordered rounded text-center table-sm"
@@ -183,5 +175,12 @@
 
 	<footer style:padding="2em">
 		<p>Copyright 2023 Hours4Climate</p>
+		<p>
+			<a
+				href="https://medium.com/@climate_crisis_moderates/introduction-to-hours4climate-5371456ada93"
+			>
+				Blog post
+			</a>
+		</p>
 	</footer>
 </main>
