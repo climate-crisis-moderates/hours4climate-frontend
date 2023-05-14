@@ -5,6 +5,8 @@
 	import NavBar from "../navbar.svelte";
 	import Form from "../form.svelte";
 	import Benefits from "../benefits.svelte";
+	import type { Country } from "../schema.svelte";
+	import { build_explanation } from "../schema.svelte";
 
 	import { PUBLIC_API_ENDPOINT } from "$env/static/public";
 
@@ -12,13 +14,24 @@
 
 	let latest: Array<Array<string>> = [];
 
+	let countries: Array<Country> = [];
+
 	async function fetchData() {
-		combined_hours = await fetch(PUBLIC_API_ENDPOINT + "/api/summary").then(
-			(response) => response.json()
-		);
-		latest = await fetch(PUBLIC_API_ENDPOINT + "/api/recent").then(
-			(response) => response.json()
-		);
+		countries = await fetch(PUBLIC_API_ENDPOINT + "/api/country")
+			.then((response) => response.json())
+			.catch((error) => {
+				console.log(error);
+			});
+		latest = await fetch(PUBLIC_API_ENDPOINT + "/api/recent")
+			.then((response) => response.json())
+			.catch((error) => {
+				console.log(error);
+			});
+		combined_hours = await fetch(PUBLIC_API_ENDPOINT + "/api/summary")
+			.then((response) => response.json())
+			.catch((error) => {
+				console.log(error);
+			});
 	}
 
 	const pollData = () => {
@@ -78,7 +91,7 @@
 		<h5 style:padding-bottom="1em" class="font-weight-bold">
 			Pledge anonymously to quantify our combined impact:
 		</h5>
-		<Form />
+		<Form {countries} />
 	</section>
 
 	<section class="container-fluid" style:background-color="#CFE2FF">
@@ -107,12 +120,15 @@
 					>
 						<thead style:background="white" style:color="#084298">
 							<tr style:border-color="white">
-								<th style:border-color="#CFE2FF" scope="col"
-									>Country</th
-								>
-								<th style:border-color="#CFE2FF" scope="col"
-									>Hours/week</th
-								>
+								<th style:border-color="#CFE2FF" scope="col">
+									Country
+								</th>
+								<th style:border-color="#CFE2FF" scope="col">
+									Hours/week
+								</th>
+								<th style:border-color="#CFE2FF" scope="col">
+									kg CO2e/year
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -127,6 +143,13 @@
 									<td style:border-color="white"
 										>{country_hours[1]}</td
 									>
+									<td style:border-color="white"
+										>{build_explanation(
+											countries,
+											country_hours[0],
+											country_hours[1]
+										).reduced_emissions.toFixed(0)}
+									</td>
 								</tr>
 							{/each}
 						</tbody>
@@ -154,16 +177,26 @@
 			>
 				<tr style:border-color="#CFE2FF">
 					<th style:border-color="#CFE2FF" scope="col">Country</th>
-					<th style:border-color="#CFE2FF" scope="col">Hours/week</th>
 					<th style:border-color="#CFE2FF" scope="col">Persons</th>
+					<th style:border-color="#CFE2FF" scope="col">Hours/week</th>
+					<th style:border-color="#CFE2FF" scope="col">
+						kg CO2e/year
+					</th>
 				</tr>
 			</thead>
 			<tbody>
 				{#each combined_hours as country_hours}
 					<tr style:border-color="#CFE2FF" style:color="#6489BE">
 						<td style:border-color="#CFE2FF">{country_hours[0]}</td>
-						<td style:border-color="#CFE2FF">{country_hours[1]}</td>
 						<td style:border-color="#CFE2FF">{country_hours[2]}</td>
+						<td style:border-color="#CFE2FF">{country_hours[1]}</td>
+						<td style:border-color="#CFE2FF"
+							>{build_explanation(
+								countries,
+								country_hours[0],
+								country_hours[1]
+							).reduced_emissions.toFixed(0)}
+						</td>
 					</tr>
 				{/each}
 			</tbody>

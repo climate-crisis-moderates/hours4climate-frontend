@@ -7,15 +7,26 @@
         PUBLIC_HCAPTCHA_KEY,
     } from "$env/static/public";
 
-    let countries: Array<string> = [];
+    import type { Country } from "./schema.svelte";
+    import type { Explanation } from "./schema.svelte";
+    import { build_explanation } from "./schema.svelte";
+
+    export let countries: Array<Country>;
 
     async function get_countries(text: string) {
-        let base = PUBLIC_API_ENDPOINT + "/api/country";
-        let url = text == "" ? base : base + "?name=" + text;
-
-        countries = await fetch(url).then((response) => response.json());
-
-        return countries;
+        if (text != "") {
+            return countries
+                .filter((country) => {
+                    return country.name
+                        .toLowerCase()
+                        .includes(text.toLowerCase());
+                })
+                .map((country) => {
+                    return country.name;
+                });
+        } else {
+            return countries.map((country) => country.name);
+        }
     }
 
     let captcha: HCaptcha;
@@ -27,8 +38,21 @@
     // whether the pledge has been submitted (once per page)
     let can_submit = true;
     let token: string | null = null;
-    let country: any = null;
-    let hours: string | null = null;
+
+    let selected_country: any = null;
+    let hours: number | null = null;
+
+    let explanation: Explanation | null = null;
+
+    $: {
+        if (selected_country !== null && hours != null) {
+            explanation = build_explanation(
+                countries,
+                selected_country["value"],
+                hours
+            );
+        }
+    }
 
     let isHuman = (event: any) => {
         token = event["detail"]["token"];
@@ -39,7 +63,7 @@
             method: "POST",
             body: JSON.stringify({
                 token,
-                country: country["value"],
+                country: selected_country["value"],
                 hours,
             }),
             headers: {
@@ -58,14 +82,14 @@
 </script>
 
 <div class="container-fluid">
-    {#if can_submit}
+    {#if can_submit && countries.length > 0}
         <form on:submit|preventDefault={pedge} class="needs-validation">
             <div class="row">
                 <div class="col-md-5">
                     <Select
                         placeholder="Country you work at"
                         loadOptions={get_countries}
-                        bind:value={country}
+                        bind:value={selected_country}
                         required
                     />
                 </div>
@@ -83,11 +107,11 @@
                         />
                     </div>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <button
                         disabled={token === null ||
                             hours === null ||
-                            country === null}
+                            selected_country === null}
                         data-placement="top"
                         title={token === null ? "Fill form" : ""}
                         type="submit"
@@ -99,7 +123,7 @@
                 </div>
             </div>
         </form>
-        <div class="text-center">
+        <div class="text-center" style="padding-top:1em">
             <HCaptcha
                 bind:this={captcha}
                 sitekey={PUBLIC_HCAPTCHA_KEY}
@@ -107,6 +131,15 @@
                 on:error={handleError}
             />
         </div>
+        {#if selected_country !== null && explanation !== null}
+            <p class="text-center">
+                Not working {hours} per week in {selected_country["value"]}
+                reduces emissions on average by {explanation.reduced_emissions.toFixed(
+                    0
+                )} kg of CO2e per year,
+                <strong>{explanation.multiplier.toFixed(2)}x more</strong> than recycling.
+            </p>
+        {/if}
     {:else}
         <p>Thank you for your pedge. Enjoy your free time.</p>
     {/if}
