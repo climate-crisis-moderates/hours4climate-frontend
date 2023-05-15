@@ -16,13 +16,11 @@
     };
 
     export function build_explanation(
-        countries: Country[],
+        countries: Map<string, Country>,
         selected_country: string,
         hours_per_week: number
     ): Explanation | null {
-        let country_info: Country | undefined = countries.find(
-            (country) => country.name == selected_country
-        );
+        let country_info = countries.get(selected_country);
         if (country_info !== undefined) {
             // 8 * 5: 8 hours a day times 5 days a week
             let reduced_emissions =

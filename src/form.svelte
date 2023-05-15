@@ -7,25 +7,32 @@
         PUBLIC_HCAPTCHA_KEY,
     } from "$env/static/public";
 
-    import type { Country } from "./schema.svelte";
-    import type { Explanation } from "./schema.svelte";
+    import type { Country, Explanation } from "./schema.svelte";
     import { build_explanation } from "./schema.svelte";
 
-    export let countries: Array<Country>;
+    export let countries: Map<string, Country>;
 
     async function get_countries(text: string) {
         if (text != "") {
-            return countries
-                .filter((country) => {
+            return Array.from(countries.values())
+                .filter((country: Country) => {
                     return country.name
                         .toLowerCase()
                         .includes(text.toLowerCase());
                 })
-                .map((country) => {
-                    return country.name;
+                .map((country: Country) => {
+                    return {
+                        value: country.id,
+                        label: country.name,
+                    };
                 });
         } else {
-            return countries.map((country) => country.name);
+            return Array.from(countries.values()).map((country: Country) => {
+                return {
+                    value: country.id,
+                    label: country.name,
+                };
+            });
         }
     }
 
@@ -82,7 +89,7 @@
 </script>
 
 <div class="container-fluid">
-    {#if can_submit && countries.length > 0}
+    {#if can_submit && countries.size > 0}
         <form on:submit|preventDefault={pedge} class="needs-validation">
             <div class="row">
                 <div class="col-md-5">
@@ -123,6 +130,17 @@
                 </div>
             </div>
         </form>
+        {#if selected_country !== null && explanation !== null}
+            <p class="text-center">
+                Not working {hours} hours per week in {countries.get(
+                    selected_country["value"]
+                ).name}
+                reduces emissions on average by {explanation.reduced_emissions.toFixed(
+                    0
+                )} kg of CO2e per year,
+                <strong>{explanation.multiplier.toFixed(2)}x more</strong> than recycling.
+            </p>
+        {/if}
         <div class="text-center" style="padding-top:1em">
             <HCaptcha
                 bind:this={captcha}
@@ -131,15 +149,6 @@
                 on:error={handleError}
             />
         </div>
-        {#if selected_country !== null && explanation !== null}
-            <p class="text-center">
-                Not working {hours} per week in {selected_country["value"]}
-                reduces emissions on average by {explanation.reduced_emissions.toFixed(
-                    0
-                )} kg of CO2e per year,
-                <strong>{explanation.multiplier.toFixed(2)}x more</strong> than recycling.
-            </p>
-        {/if}
     {:else}
         <p>Thank you for your pedge. Enjoy your free time.</p>
     {/if}

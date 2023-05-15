@@ -14,23 +14,30 @@
 
 	let latest: Array<Array<string>> = [];
 
-	let countries: Array<Country> = [];
+	let countries: Map<string, Country> = new Map();
 
 	async function fetchData() {
-		countries = await fetch(PUBLIC_API_ENDPOINT + "/api/country")
-			.then((response) => response.json())
-			.catch((error) => {
-				console.log(error);
-			});
+		if (Object.keys(countries).length == 0) {
+			let result = await fetch(PUBLIC_API_ENDPOINT + "/api/country")
+				.then((response) => response.json())
+				.catch((error) => {
+					console.log(error);
+					return {};
+				});
+			countries = new Map(Object.entries(result));
+		}
+
 		latest = await fetch(PUBLIC_API_ENDPOINT + "/api/recent")
 			.then((response) => response.json())
 			.catch((error) => {
 				console.log(error);
+				return [];
 			});
 		combined_hours = await fetch(PUBLIC_API_ENDPOINT + "/api/summary")
 			.then((response) => response.json())
 			.catch((error) => {
 				console.log(error);
+				return [];
 			});
 	}
 
@@ -138,7 +145,8 @@
 									style:color="#6489BE"
 								>
 									<td style:border-color="white"
-										>{country_hours[0]}</td
+										>{countries.get(country_hours[0])
+											.name}</td
 									>
 									<td style:border-color="white"
 										>{country_hours[1]}</td
@@ -187,7 +195,9 @@
 			<tbody>
 				{#each combined_hours as country_hours}
 					<tr style:border-color="#CFE2FF" style:color="#6489BE">
-						<td style:border-color="#CFE2FF">{country_hours[0]}</td>
+						<td style:border-color="#CFE2FF"
+							>{countries.get(country_hours[0]).name}</td
+						>
 						<td style:border-color="#CFE2FF">{country_hours[2]}</td>
 						<td style:border-color="#CFE2FF">{country_hours[1]}</td>
 						<td style:border-color="#CFE2FF"
